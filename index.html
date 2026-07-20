@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para você</title>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #008080;
+    color: #111;
+    font-family: Tahoma, Verdana, sans-serif;
+  }
+
+  .desktop {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 36px 12px;
+  }
+
+  /* ---------- JANELA ESTILO RETRO ---------- */
+  .window {
+    width: 100%;
+    max-width: 760px;
+    height: fit-content;
+    background: #c0c0c0;
+    border: 2px solid #fff;
+    box-shadow:
+      inset -2px -2px 0 #404040,
+      inset 2px 2px 0 #dfdfdf,
+      4px 4px 10px rgba(0,0,0,0.45);
+  }
+
+  .title-bar {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #fff;
+    font-weight: bold;
+    padding: 5px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .title-bar-buttons span {
+    display: inline-block;
+    width: 20px;
+    height: 18px;
+    background: #c0c0c0;
+    border: 1px solid #404040;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #fff;
+    text-align: center;
+    line-height: 16px;
+    font-size: 0.75rem;
+    color: #000;
+    margin-left: 4px;
+    font-weight: bold;
+  }
+
+  .window-body {
+    background: #ece9d8;
+    padding: 40px 26px 50px 26px;
+  }
+
+  .block {
+    text-align: center;
+    margin-bottom: 46px;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------- COLAGEM DE RECORTES ---------- */
+  .collage-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+    margin: 4px auto;
+    max-width: 640px;
+  }
+  .collage-row.big .letter { font-size: clamp(1.5rem, 5.5vw, 2.6rem); }
+  .collage-row.med .letter { font-size: clamp(1.05rem, 3.6vw, 1.6rem); }
+  .collage-row.small .letter { font-size: clamp(0.9rem, 3vw, 1.3rem); }
+
+  .letter {
+    display: inline-block;
+    padding: 5px 8px;
+    margin: 3px;
+    font-weight: bold;
+    line-height: 1;
+    box-shadow: 2px 3px 5px rgba(0,0,0,0.45);
+    border-radius: 2px;
+  }
+
+  .paper-1 { background:#f3e6c8; color:#111; transform: rotate(-6deg); font-family: 'Times New Roman', serif; }
+  .paper-2 { background:#c4185c; color:#fff; transform: rotate(5deg); font-family: 'Impact','Arial Black',sans-serif; }
+  .paper-3 { background:#0f9aa8; color:#fff; transform: rotate(-4deg); font-family: 'Courier New', monospace; }
+  .paper-4 { background:#6d3fa0; color:#fff; transform: rotate(6deg); font-family: Georgia, serif; }
+  .paper-5 { background:#ffffff; color:#000; transform: rotate(-3deg); font-family: 'Comic Sans MS', cursive; }
+  .paper-6 { background:#111111; color:#fff; transform: rotate(4deg); font-family: 'Trebuchet MS', sans-serif; }
+  .paper-7 { background:#e8b400; color:#111; transform: rotate(-7deg); font-family: 'Arial Black', sans-serif; }
+  .paper-8 { background:#7a1f1f; color:#f2e2c8; transform: rotate(3deg); font-family: Georgia, serif; }
+
+  .emoji-plain {
+    font-size: 2rem;
+    display: block;
+    margin-top: 10px;
+  }
+
+  /* ---------- SETA ---------- */
+  .arrow {
+    margin-top: 6px;
+    font-size: 2.2rem;
+    color: #000080;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(14px); }
+  }
+
+  /* ---------- IMAGEM DO GATO ---------- */
+  .cat-stage {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    height: 300px;
+    margin: 10px auto 0 auto;
+    overflow: hidden;
+  }
+  .cat-img-wrap {
+    position: absolute;
+    bottom: 6px;
+    left: -260px;
+    width: 260px;
+    animation: walk 7s linear forwards;
+    animation-play-state: paused;
+    filter: drop-shadow(3px 4px 6px rgba(0,0,0,0.4));
+  }
+  .cat-stage.play .cat-img-wrap { animation-play-state: running; }
+  .cat-img-wrap img { width: 100%; display: block; border-radius: 12px; }
+  @keyframes walk {
+    0%   { left: -260px; }
+    48%  { left: calc(50% - 130px); }
+    52%  { left: calc(50% - 130px); }
+    100% { left: calc(50% - 130px); }
+  }
+
+  /* ---------- FONTE ESTILO INTERNET ANOS 2000 (a partir do gato) ---------- */
+  .y2k, .y2k .letter {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+  }
+  .y2k.next-btn {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive !important;
+  }
+
+  /* ---------- BOTAO RETRO ---------- */
+  .next-btn {
+    margin-top: 16px;
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    box-shadow: inset -1px -1px 0 #404040, inset 1px 1px 0 #fff;
+    color: #000;
+    padding: 10px 26px;
+    font-size: 1.05rem;
+    font-family: Tahoma, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .next-btn:active {
+    border-style: inset;
+    box-shadow: inset 1px 1px 0 #404040, inset -1px -1px 0 #fff;
+  }
+
+  /* ---------- FOTO ---------- */
+  .photo-frame {
+    width: min(480px, 92vw);
+    height: min(600px, 72vh);
+    border: 4px solid #fff;
+    outline: 2px solid #404040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.35);
+    margin: 0 auto 14px auto;
+    overflow: hidden;
+  }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .divider {
+    color: #000080;
+    font-size: 1.2rem;
+    margin: 20px 0;
+    letter-spacing: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="desktop">
+  <div class="window">
+    <div class="title-bar">
+      <span>A Sexta Marcela.exe</span>
+      <div class="title-bar-buttons">
+        <span>_</span><span>□</span><span>X</span>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div class="block fade-in" id="b1">
+        <div class="collage-row big" id="titulo1"></div>
+      </div>
+
+      <div class="block fade-in" id="b2">
+        <div class="collage-row med" id="l1"></div>
+      </div>
+
+      <div class="block fade-in" id="b3">
+        <div class="collage-row med" id="l2a"></div>
+        <div class="collage-row big" id="l2b"></div>
+        <span class="emoji-plain">🥳🤯🥳</span>
+      </div>
+
+      <div class="block fade-in" id="b4">
+        <div class="collage-row med" id="l3a"></div>
+        <div class="collage-row med" id="l3b"></div>
+        <div class="collage-row med" id="l3c"></div>
+        <div class="collage-row med" id="l3d"></div>
+        <span class="emoji-plain">🤠👍</span>
+      </div>
+
+      <div class="block fade-in" id="arrowBlock">
+        <div class="arrow">↓</div>
+      </div>
+
+      <div class="block fade-in" id="catBlock">
+        <div class="cat-stage" id="catStage">
+          <div class="cat-img-wrap">
+            <img src="img/gato.jpeg" alt="Gato com uma flor">
+          </div>
+        </div>
+        <div class="collage-row med y2k" id="l5" style="margin-top:14px;"></div>
+        <div class="collage-row med y2k" id="l6"></div>
+      </div>
+
+      <div class="block fade-in" id="teaser">
+        <div class="collage-row small y2k" id="l7"></div>
+        <button class="next-btn y2k" onclick="revealNext()">continuar ↓</button>
+      </div>
+
+      <div class="block fade-in" id="finalSection">
+        <div class="photo-frame">
+          <img src="img/foto.jpg" alt="Nossa foto">
+        </div>
+      </div>
+
+      <div class="block fade-in" id="msgBlock">
+        <div class="collage-row small y2k" id="m1"></div>
+        <div class="collage-row small y2k" id="m2"></div>
+        <div class="collage-row small y2k" id="m3"></div>
+        <div class="collage-row small y2k" id="m4"></div>
+        <div class="collage-row small y2k" id="m5"></div>
+        <div class="collage-row small y2k" id="m6"></div>
+        <div class="divider">✦ ✦ ✦</div>
+        <div class="collage-row med y2k" id="sig"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const papers = ['paper-1','paper-2','paper-3','paper-4','paper-5','paper-6','paper-7','paper-8'];
+  let globalPaperIndex = 0;
+
+  function buildCollage(elId, text) {
+    const el = document.getElementById(elId);
+    text.split('').forEach(ch => {
+      if (ch === ' ') {
+        const space = document.createElement('span');
+        space.style.width = '12px';
+        space.style.display = 'inline-block';
+        el.appendChild(space);
+        return;
+      }
+      const span = document.createElement('span');
+      span.className = 'letter ' + papers[globalPaperIndex % papers.length];
+      globalPaperIndex++;
+      span.textContent = ch;
+      el.appendChild(span);
+    });
+  }
+
+  buildCollage('titulo1', 'ATENCAO!!!');
+  buildCollage('l1', 'Esse cantinho foi criado exclusivamente para uma pessoa.');
+  buildCollage('l2a', 'Coincidentemente...');
+  buildCollage('l2b', 'essa pessoa e voce');
+  buildCollage('l3a', 'So tem um problema...');
+  buildCollage('l3b', 'O orcamento foi de aproximadamente zero reais.');
+  buildCollage('l3c', 'O servico e extremamente mediocre...');
+  buildCollage('l3d', 'Mas o carinho e absurdamente grande');
+  buildCollage('l5', 'Espero que isso consiga');
+  buildCollage('l6', 'arrancar um sorriso seu.');
+  buildCollage('l7', 'Tem mais uma coisa...');
+  buildCollage('m1', 'Essa foi a ultima vez que tiramos uma foto juntos, na sua formatura.');
+  buildCollage('m2', 'Tambem foi a ultima vez que nos vimos, eu nao imaginava que nunca mais nos veriamos...');
+  buildCollage('m3', 'Mas hoje ela me lembra que, mesmo depois de tantos anos,');
+  buildCollage('m4', 'a vida fez nossos caminhos se cruzarem outra vez.');
+  buildCollage('m5', 'Quero que saiba que estou do seu lado, mesmo de longe,');
+  buildCollage('m6', 'e que sempre pode contar comigo.');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if (entry.target.id === 'catBlock') {
+          document.getElementById('catStage').classList.add('play');
+        }
+      }
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll('.fade-in').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.12 + "s";
+    observer.observe(el);
+  });
+
+  function revealNext() {
+    document.getElementById('finalSection').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
